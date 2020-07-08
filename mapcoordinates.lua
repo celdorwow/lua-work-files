@@ -85,6 +85,24 @@ for city, dists in pairs(cities) do
 end
 print("}")
 
+do
+    print("\nHand in area - Ogrimmar")
+    local handin_crystals = {
+        {0.568, 0.482}, {0.575, 0.474}, {0.579, 0.482}, {0.572, 0.491}
+    }
+    print("area_handin = {")
+
+    local str = ""
+    for _, c in ipairs(handin_crystals) do
+        local x, y = unpack(c)
+        x, y = x*mapx, y*mapy
+        str = str .. "{"..sf("%.1f", x)..", "..sf("%.1f", y).."}, "
+    end
+    print("\t" .. str)
+    print("}")
+end
+
+
 -- do
 --     local function from_map(coords)
 --         local mx, my = 1000, 666
