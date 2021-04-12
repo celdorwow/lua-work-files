@@ -1,49 +1,11 @@
-local String = {
-   StrTrim = function(s)
-      return s:match "^%s*(.*)":match "(.-)%s*$";
-   end,
-   StrSplit = function(s)
-      local t = {};
-      for w in s:gmatch("%w+") do
-         table.insert(t, w);
-      end
-      return t;
-   end,
-};
+local Array = require("Array")
+local String = require("String")
 
-local Array = {
-   Empty = function(t)
-      for _ = 1, #t do
-         table.remove(t);
-      end
-   end,
-   Copy = function(tsource, tdest)
-      tdest = tdest or {};
-      for _, v in ipairs(tsource) do
-         table.insert(tdest, v);
-      end
-   end,
-   Find = function(par, t)
-      local i;
-      while next(t, i) do
-         i = next(t, i);
-         if t[i] == par then
-            return i;
-         end
-      end
-   end,
-   IsEmpty = function(t)
-      if type(t) ~= "table" then
-         return
-      end
-      return not next(t)
-   end,
-};
 
 local Parser = {
    storedargs = {},
    localargs = {},
-   __populatetable = function(self, t_args, p_name, n, l_args)
+   __populatetable = function(t_args, p_name, n, l_args)
       local ni = Array.Find(p_name, l_args)
       while ni do
          local temp = { p_name };
@@ -65,7 +27,7 @@ local Parser = {
       Array.Empty(self.storedargs);
       Array.Empty(self.localargs);
       Array.Copy(self.allargs, self.localargs);
-      self:__populatetable(self.storedargs, p_name, n_args, self.localargs)
+      self.__populatetable(self.storedargs, p_name, n_args, self.localargs)
       return self.storedargs;
    end,
    ParseAllInputs = function(self, lookuptable)
@@ -74,7 +36,7 @@ local Parser = {
       Array.Copy(self.allargs, self.localargs);
       for _, e in ipairs(lookuptable) do
          local n_args = tonumber(e[2]) or 0
-         self:__populatetable(self.storedargs, e[1], n_args, self.localargs)
+         self.__populatetable(self.storedargs, e[1], n_args, self.localargs)
       end
       return self.storedargs;
    end,
